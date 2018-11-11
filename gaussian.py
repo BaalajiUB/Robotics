@@ -21,30 +21,64 @@ oc_grid = [[[0 for k in range(deg_cell)]for j in range(y_cell)]for i in range(x_
 oc_grid[12-1][28-1][(int(200.52)//10)] = 1
 
 #rotation
-
-pts=[[11,27,(int(200.52)//10)]] #pts = non-zero cells
-
-#for each point - target computed
-for h in pts:
-    #compute tgt#
-    deg = deg-15
-    tgt = [x,y,deg] #computed target coordinates
-    prior = oc_grid[h[0]][h[1]][h[2]]
+def rotation(eta):
+    pts=[]
+    #reassign pts
     for i in range(x_cell):
         for j in range(y_cell):
             for k in range(deg_cell):
-                t = normpdf((i*x_cell)+(x_cell//2),tgt[0],x_cell//2)*normpdf((j*y_cell)+(y_cell//2),tgt[1],y_cell//2)*normpdf((k*deg_cell)+(deg_cell//2),tgt[2],deg_cell//2)
-                oc_grid[i][j][k] = (t*prior) + oc_grid[i][j][k]
+                if oc_grid[i][j][k]!=0:
+                    pts.append([i,j,k])
+    print(len(pts))
 
-pts=[]
-#reassign pts
-for i in range(x_cell):
-    for j in range(y_cell):
-        for k in range(deg_cell):
-            if oc_grid[i][j][k]!=0:
-                pts.append([i,j,k])                
-print(len(pts))
+    #for each point - target computed
+    for h in pts:
+        #compute tgt#
+        tgt = [h[0],h[1],(h[2]+eta)]
+        prior = oc_grid[h[0]][h[1]][h[2]]
+        for i in range(x_cell):
+            for j in range(y_cell):
+                for k in range(deg_cell):
+                    t = normpdf((i*x_cell)+(x_cell//2),tgt[0],x_cell//2)*normpdf((j*y_cell)+(y_cell//2),tgt[1],y_cell//2)*normpdf((k*deg_cell)+(deg_cell//2),tgt[2],deg_cell//2)
+                    oc_grid[i][j][k] = (t*prior) + oc_grid[i][j][k]
+        #print(h)
+        
+#translation
+def translation(r,eta):
+    pts=[]
+    #reassign pts
+    for i in range(x_cell):
+        for j in range(y_cell):
+            for k in range(deg_cell):
+                if oc_grid[i][j][k]!=0:
+                    pts.append([i,j,k])                
+    print(len(pts))
+    
+    #for each point - target computed
 
+    for h in pts:
+        #compute tgt#
+        tgt = [h[0]+r*math.cos(math.radians(eta)),h[1]+r*math.sin(math.radians(eta)),h[2]]
+        prior = oc_grid[h[0]][h[1]][h[2]]
+        for i in range(x_cell):
+            for j in range(y_cell):
+                for k in range(deg_cell):
+                    t = normpdf((i*x_cell)+(x_cell//2),tgt[0],x_cell//2)*normpdf((j*y_cell)+(y_cell//2),tgt[1],y_cell//2)*normpdf((k*deg_cell)+(deg_cell//2),tgt[2],deg_cell//2)
+                    oc_grid[i][j][k] = (t*prior) + oc_grid[i][j][k]
+        #print(h)
+
+def Motion():
+    eta=1
+    r=1
+    print('rotation1')
+    rotation(eta)
+    print('translation')
+    translation(r,eta)
+    print('rotation')
+    rotation(eta)
+
+
+Motion()
 #to display the 3D matrix.
 '''
 for i in range(x_cell):
