@@ -1,0 +1,9 @@
+<launch>
+	<node name="stage" pkg="stage_ros" type="stageros"
+	      args="$(find lab5)/world/playground.world" />
+
+	<node name="path" pkg="lab5" type="path.py" output="screen" clear_params = "true">
+		<param name="goalx" value = "4.5"/>
+		<param name="goaly" value = "9.0"/>	
+	</node>	
+</launch>
