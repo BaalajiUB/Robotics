@@ -1,0 +1,9 @@
+<launch>
+	<node name="stage" pkg="stage_ros" type="stageros"
+	      args="$(find lab2)/world/playground.world" />
+	<node name="evador" pkg="lab2" type="evador.py" output="screen"
+	      respawn="true"/>
+	<node name="line_gen" pkg="lab2" type="line_gen.py" output="screen"
+	      respawn="true"/>
+	<node name="rviz" pkg="rviz" type="rviz" args="rviz/config.rviz"/>
+</launch>
